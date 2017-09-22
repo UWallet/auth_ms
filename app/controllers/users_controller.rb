@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: [:show, :update, :destroy, :update_money]
+  before_action :set_user, only: [:show, :update, :destroy, :update_money, :get_money]
   before_action :authenticate_request!, only:[:show, :update,:get_user]
 
 
@@ -27,6 +27,14 @@ class UsersController < ApplicationController
       head 201
     else
       render json: @user.errors, status: :unprocessable_entity
+    end
+  end
+
+  def get_money
+    if @user
+      render json: {money: @user.money}, status: 200
+    else
+      renderResponse("Not Found",404,"User dont exists")
     end
   end
 
