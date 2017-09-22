@@ -33,18 +33,30 @@ class UsersController < ApplicationController
   # PATCH/PUT /users/1
   def update
     if @current_user.id == params[:id].to_i
-      if user_params[:email] == @current_user.email || !user_params[:email]
+      if user_params[:email] == @current_user.email || !user_params[:email] || user_params[:firstName] == @current_user.firstName || !user_params[:firstName] || user_params[:lastName] == @current_user.lastName || !user_params[:lastName]
         if @user.update(user_params)
           head 204
         else
           render json: @user.errors, status: :unprocessable_entity
         end
       else
-        renderResponse("Not acceptable",406,"Email can't be updated")
+        renderResponse("Not acceptable",406,"Only password can be updated")
       end
     else
       renderResponse("Forbidden",403,"current user has no access")
     end
+  end
+
+  def update_money
+      if user_params[:email] == @current_user.email || !user_params[:email] || user_params[:firstName] == @current_user.firstName || !user_params[:firstName] || user_params[:lastName] == @current_user.lastName || !user_params[:lastName] || user_params[:password] == @current_user.password || !user_params[:password] || user_params[:password_confirmation] == @current_user.password_confirmation || !user_params[:password_confirmation]
+        if @user.update(user_params)
+          head 204
+        else
+          render json: @user.errors, status: :unprocessable_entity
+        end
+      else
+        renderResponse("Not acceptable",406,"Only money can be updated")
+      end
   end
 
   # DELETE /users/1
