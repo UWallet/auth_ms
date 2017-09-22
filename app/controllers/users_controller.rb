@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: [:show, :update, :destroy]
+  before_action :set_user, only: [:show, :update, :destroy, :update_money]
   before_action :authenticate_request!, only:[:show, :update,:get_user]
 
 
@@ -48,7 +48,8 @@ class UsersController < ApplicationController
   end
 
   def update_money
-      if user_params[:email] == @current_user.email || !user_params[:email] || user_params[:firstName] == @current_user.firstName || !user_params[:firstName] || user_params[:lastName] == @current_user.lastName || !user_params[:lastName] || user_params[:password] == @current_user.password || !user_params[:password] || user_params[:password_confirmation] == @current_user.password_confirmation || !user_params[:password_confirmation]
+    if @user
+      if user_params[:email] == @user.email || !user_params[:email] || user_params[:firstName] == @user.firstName || !user_params[:firstName] || user_params[:lastName] == @user.lastName || !user_params[:lastName] || user_params[:password] == @user.password || !user_params[:password] || user_params[:password_confirmation] == @user.password_confirmation || !user_params[:password_confirmation]
         if @user.update(user_params)
           head 204
         else
@@ -57,6 +58,9 @@ class UsersController < ApplicationController
       else
         renderResponse("Not acceptable",406,"Only money can be updated")
       end
+    else
+        renderResponse("Not Found",404,"User not found")
+    end
   end
 
   # DELETE /users/1
@@ -116,6 +120,6 @@ class UsersController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def user_params
-      params.require(:user).permit(:firstName, :lastName, :money, :email, :token, :password, :password_confirmation)
+      params.require(:user).permit(:firstName, :lastName, :money, :email, :token, :password, :password_confirmation, :identification)
     end
 end
