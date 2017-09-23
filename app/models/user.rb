@@ -8,13 +8,15 @@ class User < ApplicationRecord
                   uniqueness: { case_sensitive: false }
 
   validates :identification, presence: true,
-                  uniqueness: { case_sensitive: false }
+                  uniqueness: { case_sensitive: false },
+                  length: { in: 7..12, message: "Must have at least 8 digits and lest than 12"}
 
   validates :firstName, presence: true,
                   format:     { with: VALID_NAME_REGEX }
 
   validates :lastName, presence: true,
                   format:     { with: VALID_NAME_REGEX }
+
 
   before_save :downcase_email
   before_create :generate_confirmation_instructions

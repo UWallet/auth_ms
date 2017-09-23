@@ -41,7 +41,7 @@ class UsersController < ApplicationController
   # PATCH/PUT /users/1
   def update
     if @current_user.id == params[:id].to_i
-      if user_params[:email] == @current_user.email || !user_params[:email] || user_params[:firstName] == @current_user.firstName || !user_params[:firstName] || user_params[:lastName] == @current_user.lastName || !user_params[:lastName]
+      if (!user_params[:email]) && ( !user_params[:firstName]) && (!user_params[:lastName])
         if @user.update(user_params)
           head 204
         else
@@ -57,7 +57,7 @@ class UsersController < ApplicationController
 
   def update_money
     if @user
-      if user_params[:email] == @user.email || !user_params[:email] || user_params[:firstName] == @user.firstName || !user_params[:firstName] || user_params[:lastName] == @user.lastName || !user_params[:lastName] || user_params[:password] == @user.password || !user_params[:password] || user_params[:password_confirmation] == @user.password_confirmation || !user_params[:password_confirmation]
+      if (!user_params[:email]) && (!user_params[:firstName]) && (!user_params[:lastName])&&(!user_params[:password]) && (!user_params[:password_confirmation])
         if @user.update(user_params)
           head 204
         else
