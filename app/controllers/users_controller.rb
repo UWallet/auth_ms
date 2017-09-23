@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: [:show, :update, :destroy, :update_money, :get_money]
+  before_action :set_user, only: [:show, :update, :destroy, :update_money, :get_money, :get_identification]
   before_action :authenticate_request!, only:[:show, :update,:get_user]
 
 
@@ -15,7 +15,7 @@ class UsersController < ApplicationController
     if @current_user.id == params[:id].to_i
       get_user
     else
-      renderResponse("Forbidden",403,"current user has no access")
+      renderError("Forbidden",403,"current user has no access")
     end
   end
 
@@ -34,7 +34,15 @@ class UsersController < ApplicationController
     if @user
       render json: {money: @user.money}, status: 200
     else
-      renderResponse("Not Found",404,"User dont exists")
+      renderError("Not Found",404,"User dont exists")
+    end
+  end
+
+  def get_identification
+    if @user
+      render json: {identification: @user.identification}, status: 200
+    else
+      renderError("Not Found",404,"User not found")
     end
   end
 
@@ -48,10 +56,10 @@ class UsersController < ApplicationController
           render json: @user.errors, status: :unprocessable_entity
         end
       else
-        renderResponse("Not acceptable",406,"Only password can be updated")
+        renderError("Not acceptable",406,"Only password can be updated")
       end
     else
-      renderResponse("Forbidden",403,"current user has no access")
+      renderError("Forbidden",403,"current user has no access")
     end
   end
 
@@ -64,10 +72,10 @@ class UsersController < ApplicationController
           render json: @user.errors, status: :unprocessable_entity
         end
       else
-        renderResponse("Not acceptable",406,"Only money can be updated")
+        renderError("Not acceptable",406,"Only money can be updated")
       end
     else
-        renderResponse("Not Found",404,"User not found")
+        renderError("Not Found",404,"User not found")
     end
   end
 
@@ -83,10 +91,10 @@ class UsersController < ApplicationController
         auth_token = JsonWebToken.encode({user_id: user.id})
         render json: {auth_token: auth_token}, status: :ok
       #else
-      #  renderResponse("Unauthenticated",401,"Email not verified")
+      #  renderError("Unauthenticated",401,"Email not verified")
       #end
     else
-      renderResponse("Unauthenticated",401,"Invalid username / password")
+      renderError("Unauthenticated",401,"Invalid username / password")
     end
   end
 
@@ -101,9 +109,9 @@ class UsersController < ApplicationController
   def search_user
     user=User.find_by(id: params[:id])
     if user
-      renderResponse("Success",200,"The user exists")
+      renderError("Success",200,"The user exists")
     else
-      renderResponse("Not found",404,"The user does not exists")
+      renderError("Not found",404,"The user does not exists")
     end
   end
 
@@ -116,14 +124,22 @@ class UsersController < ApplicationController
       UserNotifierMailer.send_confirm_email(user).deliver
       render json: "Email succesfully confirmed", status: :ok
     else
-      renderResponse("Not found",404,"Invalid token")
+      renderError("Not found",404,"Invalid token")
     end
   end
 
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_user
-      @user = User.find(params[:id])
+      if !(Integer(params[:id]) rescue false)
+        renderError("Not Acceptable (Invalid Params)", 406, "The parameter id is not an integer")
+        return -1
+      end
+      if @user = User.find(params[:id])
+        return @user
+      else
+        renderError("Not found",404,"User not found")
+      end
     end
 
     # Only allow a trusted parameter "white list" through.

@@ -41,10 +41,10 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/ErrorModel'
-    
+
   /users/{id}:
     get:
-      summary: Returns a product with the given id only if the user is loged in
+      summary: Returns a user with the given id only if the user is loged in
       operationId: getUserById
       parameters:
         - name: id
@@ -94,7 +94,7 @@ paths:
         '204':
           description: No Content
         '401':
-          description: Unauthorized 
+          description: Unauthorized
           schema:
             $ref: '#/definitions/ErrorModel'
         '404':
@@ -102,7 +102,7 @@ paths:
           schema:
             $ref: '#/definitions/ErrorModel'
         '406':
-            description: Not Acceptable (Email can't be changed)
+            description: Not Acceptable (only password can be updated)
             schema:
               $ref: '#/definitions/ErrorModel'
         '500':
@@ -131,10 +131,40 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/ErrorModel'
-            
+  /users/update_money:
+    put:
+      summary: Updates a user money with the given id
+      operationId: updateUserMoney
+      parameters:
+        - name: id
+          in: query
+          description: The id of the user to be updated
+          required: true
+          type: integer
+        - name: user
+          in: body
+          required: true
+          description: User Object
+          schema:
+            $ref: '#/definitions/UserWithoutId'
+      responses:
+        '204':
+          description: No Content
+        '404':
+          description: Not Found
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '406':
+            description: Not Acceptable (Only money can be changed)
+            schema:
+              $ref: '#/definitions/ErrorModel'
+        '500':
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/ErrorModel'
   /users/login:
     post:
-      consumes: 
+      consumes:
         - application/x-www-form-urlencoded
       summary: Gives the user a login token
       operationId: loginUser
@@ -160,9 +190,9 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/ErrorModel'
-            
+
   /users/get_user:
-    post:
+    get:
       summary: Get the logged user's information
       operationId: get_User
       parameters:
@@ -181,10 +211,10 @@ paths:
         '500':
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/ErrorModel'   
-            
+            $ref: '#/definitions/ErrorModel'
+
   /users/search_user:
-    post:
+    get:
       summary: Looks if an user exists
       operationId: search_User
       parameters:
@@ -203,7 +233,55 @@ paths:
         '500':
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/ErrorModel'           
+            $ref: '#/definitions/ErrorModel'
+            
+  /users/get_money:
+    get:
+      summary: Gets the actual money of a given user
+      operationId: get_Money
+      parameters:
+        - name: id
+          in: query
+          description: The id of the user
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Usermoney'
+        '404':
+          description: Not found
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorModel'
+            
+  /users/get_identification:
+    get:
+      summary: Gets the actual money of a given user
+      operationId: get_identification
+      parameters:
+        - name: id
+          in: query
+          description: The id of the user
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Useridentification'
+        '404':
+          description: Not found
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorModel'
 
 definitions:
 # Products
@@ -222,7 +300,7 @@ definitions:
         type: string
       password_digest:
         type: string
-  
+
   Userreg:
     type: object
     properties:
@@ -240,6 +318,18 @@ definitions:
         type: string
       confirm_password:
         type: string
+        
+  Usermoney:
+    type: object
+    properties:
+      money:
+        type: integer
+        
+  Useridentification:
+    type: object
+    properties:
+      identification:
+        type: integer
 
   UserWithoutId:
     type: object
