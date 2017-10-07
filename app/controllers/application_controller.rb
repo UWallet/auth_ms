@@ -1,7 +1,7 @@
 class ApplicationController < ActionController::API
   require 'jsonwebtoken'
 
-  def renderResponse(message, code, description)
+  def renderError(message, code, description)
     render status: code,json: {
       message: message,
       code: code,
