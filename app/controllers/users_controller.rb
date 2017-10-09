@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: [:show, :update, :destroy, :update_money, :get_money, :get_identification]
-  before_action :authenticate_request!, only:[:show, :update,:get_user]
+  before_action :set_user, only: [:show, :update, :destroy, :update_money, :get_money, :get_identification, :verify_pass]
+  before_action :authenticate_request!, only:[:show, :update, :get_user, :verify_pass]
 
 
 
@@ -125,6 +125,14 @@ class UsersController < ApplicationController
       render json: "Email succesfully confirmed", status: :ok
     else
       renderError("Not found",404,"Invalid token")
+    end
+  end
+
+  def verify_pass
+    if @user.authenticate(params[:password])
+      renderError("Success",200,"password is correct")
+    else
+      renderError("Unauthenticated",401,"Invalid password")
     end
   end
 

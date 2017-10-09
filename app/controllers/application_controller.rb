@@ -21,7 +21,7 @@ end
 
 # Returns 401 response. To handle malformed / invalid requests.
 def invalid_authentication
-  renderResponse("Unauthorized",401,"Error on token or missing token")
+  renderError("Unauthorized",401,"Error on token or missing token")
 end
 
 private
