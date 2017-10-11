@@ -7,10 +7,6 @@ class User < ApplicationRecord
                   format:     { with: VALID_EMAIL_REGEX },
                   uniqueness: { case_sensitive: false }
 
-  validates :identification, presence: true,
-                  uniqueness: { case_sensitive: false },
-                  length: { in: 7..12, message: "Must have at least 8 digits and lest than 12"}
-
   validates :firstName, presence: true,
                   format:     { with: VALID_NAME_REGEX }
 
@@ -59,12 +55,4 @@ class User < ApplicationRecord
   def self.unexpired_token(token, period)
     where(token: token).where('token_created_at >= ?', period).first
   end
-
-
-  private
-    # This method is not available in has_secure_token
-    def invalidate_token
-      update_columns(token: nil)
-      touch(:token_created_at)
-    end
 end
