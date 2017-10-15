@@ -67,7 +67,7 @@ class UsersController < ApplicationController
     if @user
       if (!user_params[:email]) && (!user_params[:firstName]) && (!user_params[:lastName])&&(!user_params[:password]) && (!user_params[:password_confirmation])
         if @user.update(user_params)
-          head 204
+          render status: 204
         else
           render json: @user.errors, status: :unprocessable_entity
         end
