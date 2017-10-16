@@ -130,7 +130,7 @@ class UsersController < ApplicationController
 
   def verify_pass
     if @user.authenticate(params[:password])
-      renderError("Success",200,"password is correct")
+      head 200
     else
       renderError("Unauthenticated",401,"Invalid password")
     end
