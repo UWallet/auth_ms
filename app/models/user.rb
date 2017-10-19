@@ -1,4 +1,5 @@
 class User < ApplicationRecord
+  has_one :group_key
   has_secure_password
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i
   VALID_NAME_REGEX = /\A[^0-9`!@#\$%\^&*+_=]+\z/

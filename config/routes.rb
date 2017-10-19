@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :group_keys, only: [:index,:create]
   resources :users, only: [:create, :update, :show] do
     collection do
       post 'confirm'

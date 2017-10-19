@@ -24,7 +24,7 @@ class UsersController < ApplicationController
       @user = User.new(user_params)
     if @user.save
       UserNotifierMailer.send_signup_email(@user).deliver
-      head 201
+      render json: @user.id, status: 201
     else
       render json: @user.errors, status: :unprocessable_entity
     end
@@ -63,6 +63,7 @@ class UsersController < ApplicationController
     end
   end
 
+
   def update_money
     if @user
       if (!user_params[:email]) && (!user_params[:firstName]) && (!user_params[:lastName])&&(!user_params[:password]) && (!user_params[:password_confirmation])
@@ -89,7 +90,10 @@ class UsersController < ApplicationController
     if user && user.authenticate(params[:password])
       #if user.confirmed_at?
         auth_token = JsonWebToken.encode({user_id: user.id})
-        render json: {auth_token: auth_token}, status: :ok
+        render json: {auth_token: auth_token,
+                      id: user.id,
+                      notification_key: user.group_key
+                      }, status: :ok
       #else
       #  renderError("Unauthenticated",401,"Email not verified")
       #end
@@ -99,11 +103,13 @@ class UsersController < ApplicationController
   end
 
   def get_user
-    render json: {id: @current_user.id,
+    render json: {user: {id: @current_user.id,
                   firstName: @current_user.firstName,
                   lastName: @current_user.lastName,
                   email: @current_user.email,
-                  money: @current_user.money}
+                  money: @current_user.money},
+                  notification_key: @current_user.group_key
+                }
   end
 
   def search_user
