@@ -1,5 +1,5 @@
 class GroupKeysController < ApplicationController
-  before_action :set_group_key, only: [:show, :update, :destroy]
+  before_action :set_group_key, only: [:show, :update_key, :destroy]
 
   # GET /group_keys
   def index
@@ -24,8 +24,8 @@ class GroupKeysController < ApplicationController
     end
   end
 
-  # PATCH/PUT /group_keys/1
-  def update
+  # PATCH/PUT /group_keys/update_key
+  def update_key
     if @group_key.update(group_key_params)
       render json: @group_key
     else
@@ -41,7 +41,7 @@ class GroupKeysController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_group_key
-      @group_key = GroupKey.find(params[:id])
+      @group_key = GroupKey.find_by(user_id: params[:user_id])
     end
 
     # Only allow a trusted parameter "white list" through.

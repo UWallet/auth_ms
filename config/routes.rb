@@ -1,5 +1,9 @@
 Rails.application.routes.draw do
-  resources :group_keys, only: [:index,:create]
+  resources :group_keys, only: [:index,:create] do
+    collection do
+      put 'update_key'
+    end
+  end
   resources :users, only: [:create, :update, :show] do
     collection do
       post 'confirm'
