@@ -2,6 +2,7 @@ Rails.application.routes.draw do
   resources :group_keys, only: [:index,:create] do
     collection do
       put 'update_key'
+      get 'get_group_key'
     end
   end
   resources :users, only: [:create, :update, :show] do

@@ -38,6 +38,10 @@ class GroupKeysController < ApplicationController
     @group_key.destroy
   end
 
+  def get_group_key
+    render json: GroupKey.find_by(user_id: params[:user_id]), status: 200
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_group_key
