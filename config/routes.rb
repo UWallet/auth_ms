@@ -15,6 +15,7 @@ Rails.application.routes.draw do
       get 'get_money'
       get 'get_identification'
       post 'verify_pass'
+      get 'logout'
     end
 end
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html

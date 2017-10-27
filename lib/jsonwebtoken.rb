@@ -17,7 +17,11 @@ class JsonWebToken
     if expired(payload) || payload['iss'] != meta[:iss] || payload['aud'] != meta[:aud]
       return false
     else
-      return true
+      if ValidToken.find_by(id: payload['token_id'])
+        return true
+      else
+        return false
+      end
     end
   end
 

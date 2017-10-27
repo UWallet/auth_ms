@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   before_action :set_user, only: [:show, :update, :destroy, :update_money, :get_money, :get_identification, :verify_pass]
-  before_action :authenticate_request!, only:[:show, :update, :get_user, :verify_pass]
+  before_action :authenticate_request!, only:[:show, :update, :get_user, :verify_pass, :logout]
 
 
 
@@ -89,11 +89,17 @@ class UsersController < ApplicationController
     user = User.find_by(email: params[:email].to_s.downcase)
     if user && user.authenticate(params[:password])
       #if user.confirmed_at?
-        auth_token = JsonWebToken.encode({user_id: user.id})
-        render json: {auth_token: auth_token,
-                      id: user.id,
-                      notification_key: user.group_key
-                      }, status: :ok
+        token = ValidToken.new()
+        if token.save
+          auth_token = JsonWebToken.encode({user_id: user.id, token_id: token.id})
+          render json: {auth_token: auth_token,
+                        id: user.id,
+                        notification_key: user.group_key
+                        }, status: :ok
+        else
+          render json: token.errors, status: :unprocessable_entity
+          return -1
+        end
       #else
       #  renderError("Unauthenticated",401,"Email not verified")
       #end
@@ -140,6 +146,10 @@ class UsersController < ApplicationController
     else
       renderError("Unauthenticated",401,"Invalid password")
     end
+  end
+
+  def logout
+    ValidToken.find_by(id: @token_id.to_i).destroy
   end
 
   private

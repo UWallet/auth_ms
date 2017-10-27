@@ -17,6 +17,7 @@ def authenticate_request!
   end
   load_current_user!
   invalid_authentication unless @current_user
+  @token_id = payload[0]['token_id']
 end
 
 # Returns 401 response. To handle malformed / invalid requests.

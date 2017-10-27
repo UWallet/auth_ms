@@ -1,0 +1,2 @@
+class ValidToken < ApplicationRecord
+end
