@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  wash_out :wsusers
   resources :group_keys, only: [:index,:create] do
     collection do
       put 'update_key'

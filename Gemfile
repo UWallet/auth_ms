@@ -43,3 +43,4 @@ gem 'bcrypt'
 gem 'therubyracer', :platforms => :ruby
 gem 'execjs'
 gem 'jwt'
+gem 'wash_out'
