@@ -1,6 +1,6 @@
 version: '2'
 services:
-  auth_db:
+  auth-db:
     image: mysql
     ports:
     - "3311:3311"
@@ -9,14 +9,15 @@ services:
       MYSQL_USER: wallet
       MYSQL_PASSWORD: 123
       MYSQL_DATABASE: users
-      MYSQL_HOST: auth_db
-  auth_ms:
-    build: .
+      MYSQL_HOST: auth-db
+  auth-ms:
+    #build: .
+    image: kmendezp/auth-ms
     command: bash -c "sleep 40 && rm -f tmp/pids/server.pid && bundle exec rails db:migrate && bundle exec rails s -p 3001 -b '0.0.0.0'"
     ports:
       - "3001:3001"
     depends_on:
-      - auth_db
+      - auth-db
     environment:
       - gmail_username = dikelujuanjomagicwallet
       - gmail_password = dikelujuanjo0

@@ -15,7 +15,7 @@ default: &default
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   username: wallet
   password: 123
-  host: auth_db
+  host: auth-db
   socket: /tmp/mysql.sock
 
 development:
